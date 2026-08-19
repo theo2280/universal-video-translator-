@@ -1,0 +1,10 @@
+{
+  "short_name": "UvT",
+  "name": "Universal Video Translator AI",
+  "icons": [],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#a855f7",
+  "display": "standalone"
+}
+

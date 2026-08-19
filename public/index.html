@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Video Translator · Pi Ecosystem</title>
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b0e17;
+            --card-bg: #131a29;
+            --accent-purple: #8b5cf6;
+            --accent-blue: #3b82f6;
+            --text-color: #f1f5f9;
+            --border-color: #1e293b;
+            --green: #10b981;
+        }
+
+        body { font-family: sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; }
+
+        /* Branding Header */
+        .brand-header { background: #131a29; border: 1px solid var(--border-color); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+
+        /* Système Orbital */
+        .orbit-container { position: relative; width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+        .center-core { width: 40px; height: 40px; background: radial-gradient(circle, #34d399, #059669); border-radius: 50%; box-shadow: 0 0 20px var(--green); z-index: 10; }
+        
+        .orbit { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); transform-style: preserve-3d; }
+        .orbit-1 { transform: rotateX(70deg) rotateY(0deg); animation: spin1 15s linear infinite; }
+        .orbit-2 { transform: rotateX(70deg) rotateZ(45deg); animation: spin2 20s linear infinite; }
+        
+        /* Logos & Texte */
+        .logo-node { width: 30px; height: 30px; position: absolute; top: -15px; left: 50%; margin-left: -15px; transform: rotateX(-70deg); }
+        .logo-node img { width: 100%; height: 100%; border-radius: 50%; background: white; padding: 2px; }
+
+        @keyframes spin1 { from { transform: rotateX(70deg) rotateZ(0deg); } to { transform: rotateX(70deg) rotateZ(360deg); } }
+        @keyframes spin2 { from { transform: rotateX(70deg) rotateZ(45deg) rotate(0deg); } to { transform: rotateX(70deg) rotateZ(45deg) rotate(-360deg); } }
+
+        .svg-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        
+        /* Styles conservés */
+        .brand-title { font-size: 1.2rem; font-weight: 800; margin-top: 10px; }
+        .btn-pi-auth { background: linear-gradient(90deg, #8b5cf6, #3b82f6); color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; }
+        .video-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; }
+        .file-label { display: block; padding: 12px; border: 1px dashed #3b82f6; text-align: center; border-radius: 10px; cursor: pointer; }
+        .action-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; background: #2563eb; color: #fff; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="brand-header">
+        <div class="orbit-container">
+            <div class="center-core"></div>
+            <!-- Orbite 1 avec TikTok & YouTube -->
+            <div class="orbit orbit-1">
+                <div class="logo-node" style="left: 0;"><img src="https://upload.wikimedia.org/wikipedia/commons/1/18/TikTok_logo.svg"></div>
+                <div class="logo-node" style="left: 100%;"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg"></div>
+            </div>
+            <!-- Orbite 2 avec Netflix & FB -->
+            <div class="orbit orbit-2">
+                <div class="logo-node" style="left: 0;"><img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"></div>
+                <div class="logo-node" style="left: 100%;"><img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png"></div>
+            </div>
+            <!-- SVG Texte filigrane -->
+            <svg class="svg-text" viewBox="0 0 200 200">
+                <path id="circlePath" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/>
+                <text fill="white" font-size="12" font-weight="bold" letter-spacing="2">
+                    <textPath xlink:href="#circlePath">UNIVERSAL VIDEO TRANSLATOR • PI WEB3 • UNIVERSAL VIDEO TRANSLATOR •</textPath>
+                </text>
+            </svg>
+        </div>
+        <div class="brand-title">Universal Video Translator</div>
+    </div>
+
+    <button id="btn-pi-auth" class="btn-pi-auth" onclick="handlePiAuth()">Π CONNEXION PI NETWORK</button>
+
+    <div class="video-box">
+        <label for="video-input" class="file-label">📂 IMPORTER VIDÉO</label>
+        <input type="file" id="video-input" accept="video/*" style="display:none">
+    </div>
+
+    <button class="action-btn" onclick="alert('IA Agent activé...')">🚀 LANCER TRADUCTION IA</button>
+</div>
+
+<script>
+    function initPiSDK() { if (typeof Pi !== 'undefined') Pi.init({ version: "2.0", sandbox: true }); }
+    function handlePiAuth() { alert("Authentification Pi Network activée"); }
+    document.addEventListener("DOMContentLoaded", initPiSDK);
+</script>
+
+</body>
+</html>
