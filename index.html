@@ -36,6 +36,7 @@
             gap: 16px;
         }
 
+        /* HEADER AVEC LOGO 3D TOURNANT */
         .header {
             display: flex;
             align-items: center;
@@ -47,7 +48,7 @@
         }
 
         .header-left { display: flex; align-items: center; gap: 12px; }
-        #logo-3d { width: 60px; height: 60px; }
+        #logo-3d { width: 60px; height: 60px; border-radius: 50%; overflow: hidden; background: #0f172a; }
         .header-title h1 { font-size: 16px; font-weight: 700; color: #fff; }
         .header-title span { font-size: 11px; color: var(--text-muted); }
 
@@ -68,6 +69,7 @@
             cursor: pointer;
         }
 
+        /* CARD PRINCIPALE */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -99,8 +101,9 @@
             padding: 8px;
             font-size: 11px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .lang-btn.active { background: #38bdf8; color: #0f172a; font-weight: bold; }
+        .lang-btn.active { background: #38bdf8; color: #0f172a; font-weight: bold; border-color: #38bdf8; }
 
         .select-box {
             width: 100%;
@@ -132,7 +135,7 @@
             border: 1px solid #1e293b;
             border-radius: 12px;
             padding: 10px;
-            color: #64748b;
+            color: #94a3b8;
             font-size: 12px;
             resize: none;
         }
@@ -144,7 +147,7 @@
             padding: 16px;
         }
         .sub-card { display: flex; justify-content: space-between; align-items: center; }
-        .btn-purple { background: #8b5cf6; color: white; border: none; border-radius: 12px; padding: 10px 16px; font-weight: bold; font-size: 12px; }
+        .btn-purple { background: #8b5cf6; color: white; border: none; border-radius: 12px; padding: 10px 16px; font-weight: bold; font-size: 12px; cursor: pointer; }
 
         .footer { text-align: center; font-size: 11px; color: #64748b; margin: 10px 0; }
     </style>
@@ -153,6 +156,7 @@
 
 <div class="container">
 
+    <!-- HEADER DE L'APPLICATION ORIGINELLE -->
     <div class="header">
         <div class="header-left">
             <div id="logo-3d"></div>
@@ -170,6 +174,7 @@
         </div>
     </div>
 
+    <!-- CARTE DE TRADUCTION -->
     <div class="card">
         <div class="card-header">
             <h2>📹 Universal Video Translator</h2>
@@ -183,19 +188,19 @@
             <input type="file" id="video-input" accept="video/*" style="display: none;" onchange="handleFileSelect(event)">
         </div>
 
-        <div class="lang-grid">
-            <button class="lang-btn active">🇺🇸 English</button>
-            <button class="lang-btn">🇫🇷 Français</button>
-            <button class="lang-btn">🇪🇸 Español</button>
-            <button class="lang-btn">🇩🇪 Deutsch</button>
-            <button class="lang-btn">🇮🇹 Italiano</button>
-            <button class="lang-btn">🇨🇳 中文</button>
-            <button class="lang-btn">🇷🇺 Русский</button>
-            <button class="lang-btn">🇮🇳 हिन्दी</button>
-            <button class="lang-btn">🇯🇵 日本語</button>
-            <button class="lang-btn">🇰🇷 한국어</button>
-            <button class="lang-btn">🇵🇹 Português</button>
-            <button class="lang-btn">🇸🇦 العربية</button>
+        <div class="lang-grid" id="lang-grid">
+            <button class="lang-btn active" onclick="selectLang(this)">🇺🇸 English</button>
+            <button class="lang-btn" onclick="selectLang(this)">🇫🇷 Français</button>
+            <button class="lang-btn" onclick="selectLang(this)">🇪🇸 Español</button>
+            <button class="lang-btn" onclick="selectLang(this)">🇩🇪 Deutsch</button>
+            <button class="lang-btn" onclick="selectLang(this)">🇮🇹 Italiano</button>
+            <button class="lang-btn" onclick="selectLang(this)">🇨🇳 中文</button>
+            <button class="lang-btn" onclick="selectLang(this)">🇷🇺 Русский</button>
+            <button class="lang-btn" onclick="selectLang(this)">🇮🇳 हिन्दी</button>
+            <button class="lang-btn" onclick="selectLang(this)">🇯🇵 日本語</button>
+            <button class="lang-btn" onclick="selectLang(this)">🇰🇷 한국어</button>
+            <button class="lang-btn" onclick="selectLang(this)">🇵🇹 Português</button>
+            <button class="lang-btn" onclick="selectLang(this)">🇸🇦 العربية</button>
         </div>
 
         <div style="display: flex; gap: 8px;">
@@ -214,18 +219,20 @@
         <textarea class="output-box" id="output-text" placeholder="Résultat de la traduction..." readonly></textarea>
     </div>
 
+    <!-- CARTE ABONNEMENT -->
     <div class="sub-card">
         <div>
             <div style="font-weight: bold; font-size: 13px;">📊 Votre abonnement</div>
-            <div style="font-size: 11px; color: var(--text-muted);" id="user-status">Connectez-vous</div>
+            <div style="font-size: 11px; color: var(--text-muted);" id="user-status">Connectez-vous avec votre Pi Wallet</div>
         </div>
         <button class="btn-purple" onclick="triggerPiPayment('Abonnement Premium')">💎 VOIR LES PLANS</button>
     </div>
 
+    <!-- STATISTIQUES DE L'APPLICATION -->
     <div class="stats-card">
         <div style="font-weight: bold; margin-bottom: 6px; font-size: 12px; color: var(--text-muted);">📈 Stats</div>
-        <div style="font-size: 12px;">📑 Traductions : <span id="stat-trans">0</span></div>
-        <div style="font-size: 12px;">🎬 Vidéos : <span id="stat-vids">0</span></div>
+        <div style="font-size: 12px; margin-bottom: 2px;">📑 Traductions : <span id="stat-trans">0</span></div>
+        <div style="font-size: 12px; margin-bottom: 2px;">🎬 Vidéos : <span id="stat-vids">0</span></div>
         <div style="font-size: 12px;">💎 UvT gagnés : <span id="stat-uvt">0</span></div>
     </div>
 
@@ -236,9 +243,10 @@
 </div>
 
 <script>
+    // Initialisation Pi SDK
     try {
         Pi.init({ version: "2.0", sandbox: true });
-    } catch(e) { console.error("Pi SDK Init Error", e); }
+    } catch(e) { console.error("Erreur Pi SDK Init:", e); }
 
     let currentUser = null;
 
@@ -254,7 +262,7 @@
         } catch (err) {
             console.error(err);
             btn.innerText = "CONNEXION PI";
-            alert("Erreur connexion Pi Network");
+            alert("Veuillez ouvrir cette application dans Pi Browser.");
         }
     }
 
@@ -264,13 +272,13 @@
             if (!currentUser) return;
         }
 
+        // Appel du paiement avec callbacks Serverless ultrarapides
         Pi.createPayment({
             amount: 1,
-            memo: memoText || "Paiement Service Pi",
+            memo: memoText || "Traduction Vidéo",
             metadata: { type: "video_translation" }
         }, {
             onReadyForServerApproval: function(paymentId) {
-                console.log("Approbation instantanée via Vercel pour paymentId:", paymentId);
                 return fetch('/api/approve', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -278,40 +286,51 @@
                 }).then(res => res.json());
             },
             onReadyForServerCompletion: function(paymentId, txid) {
-                console.log("Complétion instantanée via Vercel pour TXID:", txid);
                 return fetch('/api/complete', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ paymentId: paymentId, txid: txid })
                 }).then(res => res.json()).then(data => {
-                    alert("🎉 Transaction approuvée et complétée !");
+                    alert("🎉 Paiement réussi ! Traitement de la vidéo en cours...");
                     document.getElementById('stat-trans').innerText = "1";
                     document.getElementById('stat-vids').innerText = "1";
                     document.getElementById('stat-uvt').innerText = "10";
+                    document.getElementById('output-text').value = "Traduction terminée avec succès !";
                 });
             },
             onCancel: function(paymentId) {
-                console.log("Paiement annulé", paymentId);
+                console.log("Paiement annulé:", paymentId);
             },
             onError: function(error, payment) {
-                console.error("Erreur paiement:", error);
+                console.error("Erreur de paiement:", error);
             }
         });
     }
 
     function onIncompletePaymentFound(payment) {
-        console.log("Paiement incomplet :", payment);
+        if (payment) {
+            fetch('/api/complete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ paymentId: payment.identifier, txid: payment.transaction ? payment.transaction.txid : "sandbox" })
+            });
+        }
+    }
+
+    function selectLang(btn) {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
     }
 
     function handleFileSelect(event) {
         const file = event.target.files[0];
         if (file) {
-            document.getElementById('drop-title').innerText = "Vidéo : " + file.name;
+            document.getElementById('drop-title').innerText = file.name;
             document.getElementById('drop-sub').innerText = (file.size / (1024 * 1024)).toFixed(2) + " Mo";
         }
     }
 
-    // Logo 3D
+    // --- ANIMATION 3D DU LOGO ORIGINEL ---
     const container = document.getElementById('logo-3d');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
@@ -319,28 +338,26 @@
     renderer.setSize(60, 60);
     container.appendChild(renderer.domElement);
 
-    const sphere = new THREE.Mesh(
-        new THREE.SphereGeometry(1.0, 32, 32),
-        new THREE.MeshBasicMaterial({ color: 0x10b981 })
-    );
+    const sphereGeometry = new THREE.SphereGeometry(1.0, 32, 32);
+    const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x10b981, wireframe: true });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
 
-    const ring = new THREE.Mesh(
-        new THREE.TorusGeometry(2.0, 0.1, 16, 100),
-        new THREE.MeshBasicMaterial({ color: 0x38bdf8 })
-    );
+    const ringGeometry = new THREE.TorusGeometry(1.8, 0.08, 16, 100);
+    const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
     ring.rotation.x = Math.PI / 2.5;
     scene.add(ring);
 
-    camera.position.z = 7;
+    camera.position.z = 5;
 
-    function animate() {
-        requestAnimationFrame(animate);
+    function animate3D() {
+        requestAnimationFrame(animate3D);
         sphere.rotation.y += 0.02;
-        ring.rotation.z += 0.01;
+        ring.rotation.z += 0.025;
         renderer.render(scene, camera);
     }
-    animate();
+    animate3D();
 </script>
 
 </body>

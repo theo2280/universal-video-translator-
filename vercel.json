@@ -1,20 +1,8 @@
 {
-  "cleanUrls": false,
-  "routes": [
-    {
-      "src": "/validation-key.txt",
-      "dest": "/validation-key.txt",
-      "headers": {
-        "content-type": "text/plain; charset=utf-8",
-        "cache-control": "s-maxage=0, max-age=0, no-cache, no-store, must-revalidate",
-        "access-control-allow-origin": "*"
-      }
-    },
-    { "src": "/privacy", "dest": "/privacy.html" },
-    { "src": "/terms", "dest": "/terms.html" },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/approve", "destination": "/api/approve.js" },
+    { "source": "/api/complete", "destination": "/api/complete.js" },
+    { "source": "/(.*)", "destination": "/public/index.html" }
   ]
 }
