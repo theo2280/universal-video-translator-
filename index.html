@@ -7,109 +7,460 @@
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        body { margin: 0; padding: 20px; background: #0b0f19; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 90vh; }
-        #canvas-container { width: 250px; height: 250px; margin-bottom: 20px; }
-        .card { background: #111827; border: 1px solid #1e293b; border-radius: 16px; padding: 24px; text-align: center; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        button { width: 100%; padding: 14px; margin: 8px 0; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; }
-        .btn-pi { background: #3b82f6; color: white; }
-        .btn-pay { background: #a855f7; color: white; }
-        .btn-file { background: #1e293b; color: #94a3b8; border: 1px dashed #334155; }
-        #status { margin-top: 15px; font-size: 13px; color: #10b981; font-weight: bold; }
+        :root {
+            --bg-color: #0b1120;
+            --card-bg: #131c31;
+            --card-border: #1e293b;
+            --accent-blue: #38bdf8;
+            --btn-blue: #0284c7;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 12px 16px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #logo-3d {
+            width: 50px;
+            height: 50px;
+        }
+
+        .header-title h1 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .header-title span {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 6px;
+        }
+
+        .badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .badge-testnet { background: #15803d; color: #86efac; }
+        .badge-mainnet { background: #1e293b; color: #64748b; }
+
+        .btn-pi-auth {
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Card Principal */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card-header h2 {
+            font-size: 20px;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-header p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Drop Area */
+        .drop-zone {
+            border: 2px dashed #334155;
+            border-radius: 16px;
+            padding: 30px 16px;
+            text-align: center;
+            background: rgba(15, 23, 42, 0.4);
+            cursor: pointer;
+        }
+
+        .drop-zone-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .drop-zone-title {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .drop-zone-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Languages Grid */
+        .section-title {
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+        }
+
+        .lang-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .lang-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #cbd5e1;
+            border-radius: 12px;
+            padding: 8px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .lang-btn.active {
+            background: #38bdf8;
+            color: #0f172a;
+            border-color: #38bdf8;
+            font-weight: bold;
+        }
+
+        .select-box {
+            width: 100%;
+            padding: 10px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        /* Actions */
+        .btn-action {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-blue { background: #0284c7; color: white; }
+        .btn-cyan { background: #06b6d4; color: white; }
+        .btn-teal { background: #0d9488; color: white; }
+
+        /* Output Box */
+        .output-box {
+            width: 100%;
+            height: 100px;
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 10px;
+            color: #64748b;
+            font-size: 12px;
+            resize: none;
+        }
+
+        /* Subscriptions & Stats */
+        .sub-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-purple {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .stats-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 16px;
+            font-size: 12px;
+        }
+
+        .stats-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <div id="canvas-container"></div>
-        <h2>Universal Video Translator</h2>
+<div class="container">
 
-        <button class="btn-pi" onclick="connectPi()">π CONNEXION PI NETWORK</button>
-        <button class="btn-file">📁 IMPORTER VIDÉO</button>
-        <button class="btn-pay" onclick="triggerPiPayment()">🚀 PAYER 1 π & TRANSDUIRE</button>
-        
-        <div id="status">Statut: Prêt</div>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div id="logo-3d"></div>
+            <div class="header-title">
+                <h1>Universal Translator</h1>
+                <span>theofintech.pi | by theo2280</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="badges">
+                <span class="badge badge-testnet">Testnet</span>
+                <span class="badge badge-mainnet">Mainnet</span>
+            </div>
+            <button class="btn-pi-auth" id="btn-connect" onclick="connectPi()">Π CONNEXION PI</button>
+        </div>
     </div>
 
-    <script>
-        // Initialisation Pi SDK
+    <!-- Main App Card -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📹 Universal Video Translator</h2>
+            <p>Traduction vidéo multi-langues par IA agentique • 12 langues • Token UVT</p>
+        </div>
+
+        <div class="drop-zone" onclick="document.getElementById('video-input').click()">
+            <div class="drop-zone-icon">🎥</div>
+            <div class="drop-zone-title">Déposer votre vidéo</div>
+            <div class="drop-zone-sub">MP4, AVI, MKV • Max 2 Go</div>
+            <input type="file" id="video-input" accept="video/*" style="display: none;">
+        </div>
+
+        <div class="section-title">🌐 Langues</div>
+        <div class="lang-grid">
+            <button class="lang-btn active">🇺🇸 English</button>
+            <button class="lang-btn">🇫🇷 Français</button>
+            <button class="lang-btn">🇪🇸 Español</button>
+            <button class="lang-btn">🇩🇪 Deutsch</button>
+            <button class="lang-btn">🇮🇹 Italiano</button>
+            <button class="lang-btn">🇨🇳 中文</button>
+            <button class="lang-btn">🇷🇺 Русский</button>
+            <button class="lang-btn">🇮🇳 हिन्दी</button>
+            <button class="lang-btn">🇯🇵 日本語</button>
+            <button class="lang-btn">🇰🇷 한국어</button>
+            <button class="lang-btn">🇵🇹 Português</button>
+            <button class="lang-btn">🇸🇦 العربية</button>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+            <select class="select-box">
+                <option>Détection auto</option>
+            </select>
+            <select class="select-box">
+                <option>Français</option>
+            </select>
+        </div>
+
+        <button class="btn-action btn-blue" onclick="triggerPiPayment('Traduction IA Agent')">🤖 TRADUIRE (IA AGENT)</button>
+        <button class="btn-action btn-cyan" onclick="triggerPiPayment('Doublage Vocal')">🎙️ DOUBLAGE VOCAL</button>
+        <button class="btn-action btn-teal" onclick="triggerPiPayment('Sous-titres')">📝 SOUS-TITRES</button>
+
+        <textarea class="output-box" placeholder="Texte transcrit/traduit..." readonly></textarea>
+    </div>
+
+    <!-- Subscriptions Card -->
+    <div class="sub-card">
+        <div>
+            <div style="font-weight: bold; font-size: 13px;">📊 Votre abonnement</div>
+            <div style="font-size: 11px; color: var(--text-muted);" id="user-status">Connectez-vous</div>
+        </div>
+        <button class="btn-purple" onclick="triggerPiPayment('Abonnement Premium')">💎 VOIR LES PLANS</button>
+    </div>
+
+    <!-- Stats Card -->
+    <div class="stats-card">
+        <div class="stats-title">📈 Stats</div>
+        <div>📑 Traductions : 0</div>
+        <div>🎬 Vidéos : 0</div>
+        <div>💎 UvT gagnés : 0</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        © 2025 <b>theofintech.pi</b> • Développé par <b>theo2280</b><br>
+        GitHub • Pi Network GCV 314 159 USDC
+    </div>
+
+</div>
+
+<script>
+    // Initialisation Pi SDK
+    try {
+        Pi.init({ version: "2.0", sandbox: true });
+    } catch(e) { console.error("Pi SDK init error", e); }
+
+    let currentUser = null;
+
+    async function connectPi() {
+        const btn = document.getElementById('btn-connect');
+        const userStatus = document.getElementById('user-status');
+        btn.innerText = "...";
         try {
-            Pi.init({ version: "2.0", sandbox: true });
-        } catch(e) { console.log(e); }
+            const auth = await Pi.authenticate(['payments', 'username'], onIncompletePaymentFound);
+            currentUser = auth.user.username;
+            btn.innerText = "@" + currentUser;
+            userStatus.innerText = "Connecté : @" + currentUser;
+        } catch (err) {
+            console.error(err);
+            btn.innerText = "CONNEXION PI";
+            alert("Erreur de connexion au Pi Network.");
+        }
+    }
 
-        let currentUser = null;
-
-        async function connectPi() {
-            document.getElementById('status').innerText = "Connexion en cours...";
-            try {
-                const auth = await Pi.authenticate(['payments', 'username'], onIncompletePaymentFound);
-                currentUser = auth.user.username;
-                document.getElementById('status').innerText = "Connecté: @" + currentUser;
-            } catch (err) {
-                console.error(err);
-                document.getElementById('status').innerText = "Erreur de connexion";
-            }
+    async function triggerPiPayment(memoText) {
+        if (!currentUser) {
+            await connectPi();
+            if (!currentUser) return;
         }
 
-        async function triggerPiPayment() {
-            if (!currentUser) {
-                await connectPi();
-            }
-            
-            document.getElementById('status').innerText = "Initialisation du paiement...";
-
-            try {
-                Pi.createPayment({
-                    amount: 1,
-                    memo: "Test de validation Developer Portal",
-                    metadata: { type: "test_translation" }
-                }, {
-                    onReadyForServerApproval: function(paymentId) {
-                        console.log("Approval ID:", paymentId);
-                        document.getElementById('status').innerText = "Paiement approuvé !";
-                    },
-                    onReadyForServerCompletion: function(paymentId, txid) {
-                        console.log("Completed TXID:", txid);
-                        document.getElementById('status').innerText = "Paiement réussi (TX: " + txid.substring(0,8) + "...)";
-                        alert("Paiement effectué avec succès !");
-                    },
-                    onCancel: function(paymentId) {
-                        document.getElementById('status').innerText = "Paiement annulé";
-                    },
-                    onError: function(error, payment) {
-                        console.error(error);
-                        document.getElementById('status').innerText = "Erreur paiement";
-                    }
-                });
-            } catch (err) {
-                console.error(err);
-                document.getElementById('status').innerText = "Erreur lors du paiement";
-            }
+        try {
+            Pi.createPayment({
+                amount: 1,
+                memo: memoText || "Test de validation Developer Portal",
+                metadata: { action: memoText }
+            }, {
+                onReadyForServerApproval: function(paymentId) {
+                    console.log("Approval paymentId:", paymentId);
+                },
+                onReadyForServerCompletion: function(paymentId, txid) {
+                    console.log("Completed TXID:", txid);
+                    alert("Paiement réussi ! TXID: " + txid);
+                },
+                onCancel: function(paymentId) {
+                    console.log("Paiement annulé");
+                },
+                onError: function(error, payment) {
+                    console.error("Erreur paiement:", error);
+                }
+            });
+        } catch (err) {
+            console.error("Payment error", err);
         }
+    }
 
-        function onIncompletePaymentFound(payment) {
-            console.log("Incomplete payment:", payment);
-        }
+    function onIncompletePaymentFound(payment) {
+        console.log("Paiement incomplet :", payment);
+    }
 
-        // Animation 3D Simple
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(250, 250);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+    // Animation 3D Logo (Œil + Sphère + Anneaux)
+    const container = document.getElementById('logo-3d');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(50, 50);
+    container.appendChild(renderer.domElement);
 
-        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-        const material = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
-        const torusKnot = new THREE.Mesh(geometry, material);
-        scene.add(torusKnot);
-        camera.position.z = 30;
+    // Sphère centrale
+    const sphereGeo = new THREE.SphereGeometry(1.2, 32, 32);
+    const sphereMat = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+    const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+    scene.add(sphere);
 
-        function animate() {
-            requestAnimationFrame(animate);
-            torusKnot.rotation.x += 0.01;
-            torusKnot.rotation.y += 0.01;
-            renderer.render(scene, camera);
-        }
-        animate();
-    </script>
+    // Anneau
+    const ringGeo = new THREE.TorusGeometry(2.2, 0.1, 16, 100);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = Math.PI / 3;
+    scene.add(ring);
+
+    camera.position.z = 6;
+
+    function animate() {
+        requestAnimationFrame(animate);
+        sphere.rotation.y += 0.01;
+        ring.rotation.z += 0.02;
+        renderer.render(scene, camera);
+    }
+    animate();
+</script>
+
 </body>
 </html>
