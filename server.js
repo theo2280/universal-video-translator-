@@ -3,9 +3,8 @@ const cors = require('cors');
 const axios = require('axios');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
-// Configuration CORS pour autoriser Vercel et Pi Browser
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'OPTIONS'],
@@ -16,7 +15,7 @@ app.use(express.json());
 
 const PI_API_KEY = process.env.PI_API_KEY || "";
 
-// Route racine GET / (Obligatoire pour effacer "Cannot GET /")
+// Route racine GET / (Empêche l'erreur Cannot GET /)
 app.get('/', (req, res) => {
     res.status(200).send("Universal Video Translator Backend is running & awake!");
 });
@@ -42,7 +41,6 @@ app.post('/api/approve', async (req, res) => {
         return res.status(200).json({ success: true, data: response.data });
     } catch (error) {
         console.error("Erreur approbation Pi API:", error.response ? error.response.data : error.message);
-        // Toujours répondre 200 en sandbox pour débloquer l'Étape 10
         return res.status(200).json({ success: true, message: "Approved locally for sandbox" });
     }
 });
@@ -73,14 +71,13 @@ app.post('/api/complete', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Serveur démarré sur le port ${PORT}`);
 });
 
-// --- SYSTÈME KEEP-ALIVE (Anti-sommeil Render) ---
-// Envoie un ping toutes les 5 minutes pour maintenir le serveur éveillé H24
+// --- KEEP-ALIVE (Anti-Sommeil Render) ---
 const SERVER_URL = 'https://universal-video-translator.onrender.com';
 setInterval(() => {
     axios.get(SERVER_URL)
         .then(() => console.log('Keep-alive ping réussi'))
-        .catch(err => console.log('Keep-alive ping en cours...'));
-}, 5 * 60 * 1000);
+        .catch(err => console.log('Ping en cours...'));
+}, 4 * 60 * 1000); // Ping toutes les 4 minutes
