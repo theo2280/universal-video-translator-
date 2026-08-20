@@ -36,7 +36,6 @@
             gap: 16px;
         }
 
-        /* Header */
         .header {
             display: flex;
             align-items: center;
@@ -56,7 +55,6 @@
         #logo-3d {
             width: 60px;
             height: 60px;
-            position: relative;
         }
 
         .header-title h1 {
@@ -103,7 +101,6 @@
             cursor: pointer;
         }
 
-        /* Card Principal */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -117,9 +114,6 @@
         .card-header h2 {
             font-size: 20px;
             color: #38bdf8;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .card-header p {
@@ -128,40 +122,13 @@
             margin-top: 4px;
         }
 
-        /* Drop Area */
         .drop-zone {
             border: 2px dashed #334155;
             border-radius: 16px;
-            padding: 30px 16px;
+            padding: 24px 16px;
             text-align: center;
             background: rgba(15, 23, 42, 0.4);
             cursor: pointer;
-        }
-
-        .drop-zone-icon {
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-
-        .drop-zone-title {
-            font-size: 15px;
-            font-weight: bold;
-        }
-
-        .drop-zone-sub {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        /* Languages Grid */
-        .section-title {
-            font-size: 13px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-muted);
         }
 
         .lang-grid {
@@ -177,10 +144,6 @@
             border-radius: 12px;
             padding: 8px;
             font-size: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
             cursor: pointer;
         }
 
@@ -191,17 +154,6 @@
             font-weight: bold;
         }
 
-        .select-box {
-            width: 100%;
-            padding: 10px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: white;
-            border-radius: 10px;
-            font-size: 12px;
-        }
-
-        /* Actions */
         .btn-action {
             width: 100%;
             padding: 12px;
@@ -210,78 +162,15 @@
             font-weight: bold;
             font-size: 13px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
 
         .btn-blue { background: #0284c7; color: white; }
-        .btn-cyan { background: #06b6d4; color: white; }
-        .btn-teal { background: #0d9488; color: white; }
-
-        .output-box {
-            width: 100%;
-            height: 100px;
-            background: #0f172a;
-            border: 1px solid #1e293b;
-            border-radius: 12px;
-            padding: 10px;
-            color: #64748b;
-            font-size: 12px;
-            resize: none;
-        }
-
-        /* Subscriptions & Stats */
-        .sub-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .btn-purple {
-            background: #8b5cf6;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-weight: bold;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .stats-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 16px;
-            font-size: 12px;
-        }
-
-        .stats-title {
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: var(--text-muted);
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 11px;
-            color: #64748b;
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
 
-    <!-- Header -->
     <div class="header">
         <div class="header-left">
             <div id="logo-3d"></div>
@@ -299,177 +188,104 @@
         </div>
     </div>
 
-    <!-- Main App Card -->
     <div class="card">
         <div class="card-header">
             <h2>📹 Universal Video Translator</h2>
-            <p>Traduction vidéo multi-langues par IA agentique • 12 langues • Token UVT</p>
+            <p>Traduction vidéo multi-langues par IA agentique</p>
         </div>
 
-        <div class="drop-zone" onclick="document.getElementById('video-input').click()">
-            <div class="drop-zone-icon">🎥</div>
-            <div class="drop-zone-title" id="drop-title">Déposer votre vidéo</div>
-            <div class="drop-zone-sub" id="drop-sub">MP4, AVI, MKV • Max 2 Go</div>
-            <input type="file" id="video-input" accept="video/*" style="display: none;" onchange="handleFileSelect(event)">
+        <div class="drop-zone">
+            🎥 Déposer votre vidéo (MP4, AVI, MKV)
         </div>
 
-        <div class="section-title">🌐 Langues</div>
         <div class="lang-grid">
             <button class="lang-btn active">🇺🇸 English</button>
             <button class="lang-btn">🇫🇷 Français</button>
             <button class="lang-btn">🇪🇸 Español</button>
-            <button class="lang-btn">🇩🇪 Deutsch</button>
-            <button class="lang-btn">🇮🇹 Italiano</button>
-            <button class="lang-btn">🇨🇳 中文</button>
-            <button class="lang-btn">🇷🇺 Русский</button>
-            <button class="lang-btn">🇮🇳 हिन्दी</button>
-            <button class="lang-btn">🇯🇵 日本語</button>
-            <button class="lang-btn">🇰🇷 한국어</button>
-            <button class="lang-btn">🇵🇹 Português</button>
-            <button class="lang-btn">🇸🇦 العربية</button>
         </div>
 
-        <!-- Détection Automatique -->
-        <div style="display: flex; gap: 8px;">
-            <select class="select-box" id="source-lang" style="border-color: #38bdf8;">
-                <option value="auto">🌐 Détection auto (Analysée)</option>
-                <option value="en">🇺🇸 Anglais</option>
-                <option value="fr">🇫🇷 Français</option>
-                <option value="es">🇪🇸 Espagnol</option>
-            </select>
-            <select class="select-box" id="target-lang">
-                <option value="fr">🇫🇷 Français</option>
-                <option value="en">🇺🇸 Anglais</option>
-                <option value="es">🇪🇸 Espagnol</option>
-            </select>
-        </div>
-
-        <button class="btn-action btn-blue" onclick="triggerPiPayment('Traduction IA Agent')">🤖 TRADUIRE (IA AGENT)</button>
-        <button class="btn-action btn-cyan" onclick="triggerPiPayment('Doublage Vocal')">🎙️ DOUBLAGE VOCAL</button>
-        <button class="btn-action btn-teal" onclick="triggerPiPayment('Sous-titres')">📝 SOUS-TITRES</button>
-
-        <textarea class="output-box" id="output-text" placeholder="Texte transcrit/traduit..." readonly></textarea>
-    </div>
-
-    <!-- Subscriptions Card -->
-    <div class="sub-card">
-        <div>
-            <div style="font-weight: bold; font-size: 13px;">📊 Votre abonnement</div>
-            <div style="font-size: 11px; color: var(--text-muted);" id="user-status">Connectez-vous</div>
-        </div>
-        <button class="btn-purple" onclick="triggerPiPayment('Abonnement Premium')">💎 VOIR LES PLANS</button>
-    </div>
-
-    <!-- Stats Card -->
-    <div class="stats-card">
-        <div class="stats-title">📈 Stats</div>
-        <div>📑 Traductions : <span id="stat-trans">0</span></div>
-        <div>🎬 Vidéos : <span id="stat-vids">0</span></div>
-        <div>💎 UvT gagnés : <span id="stat-uvt">0</span></div>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        © 2025 <b>theofintech.pi</b> • Développé par <b>theo2280</b><br>
-        GitHub • Pi Network GCV 314 159 USDC
+        <button class="btn-action btn-blue" onclick="triggerPiPayment('Traduction IA Agent')">🤖 TRADUIRE (1 PI)</button>
     </div>
 
 </div>
 
 <script>
-    // Initialisation Pi SDK
     try {
         Pi.init({ version: "2.0", sandbox: true });
-    } catch(e) { console.error("Pi SDK Error", e); }
+    } catch(e) { console.error("Pi SDK Init Error", e); }
 
     let currentUser = null;
 
     async function connectPi() {
         const btn = document.getElementById('btn-connect');
-        const userStatus = document.getElementById('user-status');
-        btn.innerText = "...";
         try {
             const auth = await Pi.authenticate(['payments', 'username'], onIncompletePaymentFound);
             currentUser = auth.user.username;
             btn.innerText = "@" + currentUser;
-            userStatus.innerText = "Connecté : @" + currentUser;
         } catch (err) {
             console.error(err);
-            btn.innerText = "CONNEXION PI";
             alert("Erreur de connexion Pi Network");
         }
     }
 
-    // Gestion du paiement connectée directement au serveur Backend Render
     async function triggerPiPayment(memoText) {
         if (!currentUser) {
             await connectPi();
             if (!currentUser) return;
         }
 
+        // Réveil préventif du serveur Render avant d'ouvrir le paiement Pi
         try {
-            Pi.createPayment({
-                amount: 1,
-                memo: memoText || "Test validation Developer Portal",
-                metadata: { type: "video_translation" }
-            }, {
-                onReadyForServerApproval: function(paymentId) {
-                    console.log("Approval paymentId envoyé au serveur Render:", paymentId);
-                    fetch('https://universal-video-translator.onrender.com/api/approve', {
+            await fetch('https://universal-video-translator.onrender.com/');
+        } catch(e) { console.log("Pré-réveil du serveur Render..."); }
+
+        Pi.createPayment({
+            amount: 1,
+            memo: memoText || "Paiement Test Pi Developer",
+            metadata: { type: "video_translation" }
+        }, {
+            onReadyForServerApproval: async function(paymentId) {
+                console.log("Validation en cours sur Render pour paymentId:", paymentId);
+                try {
+                    const res = await fetch('https://universal-video-translator.onrender.com/api/approve', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ paymentId })
-                    })
-                    .then(res => res.json())
-                    .then(data => console.log("Approbation backend réussie:", data))
-                    .catch(e => console.error("Erreur durant l'approbation backend:", e));
-                },
-                onReadyForServerCompletion: function(paymentId, txid) {
-                    console.log("Completion TXID:", txid);
-                    fetch('https://universal-video-translator.onrender.com/api/complete', {
+                    });
+                    const data = await res.json();
+                    console.log("Approbation OK:", data);
+                } catch(e) {
+                    console.error("Erreur approbation Render:", e);
+                }
+            },
+            onReadyForServerCompletion: async function(paymentId, txid) {
+                console.log("Completion TXID:", txid);
+                try {
+                    const res = await fetch('https://universal-video-translator.onrender.com/api/complete', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ paymentId, txid })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        alert("Transaction réussie et confirmée ! TXID: " + txid.substring(0, 10) + "...");
-                        document.getElementById('stat-trans').innerText = "1";
-                        document.getElementById('stat-vids').innerText = "1";
-                        document.getElementById('stat-uvt').innerText = "10";
                     });
-                },
-                onCancel: function(paymentId) {
-                    console.log("Paiement annulé", paymentId);
-                },
-                onError: function(error, payment) {
-                    console.error("Erreur paiement:", error);
+                    const data = await res.json();
+                    alert("Succès ! Transaction validée : " + txid);
+                } catch(e) {
+                    console.error("Erreur completion Render:", e);
                 }
-            });
-        } catch (err) {
-            console.error(err);
-        }
+            },
+            onCancel: function(paymentId) {
+                console.log("Paiement annulé", paymentId);
+            },
+            onError: function(error, payment) {
+                console.error("Erreur paiement:", error);
+            }
+        });
     }
 
     function onIncompletePaymentFound(payment) {
-        console.log("Paiement non complété trouvé :", payment);
+        console.log("Paiement non complété :", payment);
     }
 
-    // Gestion du dépôt de fichier et détection auto de la langue
-    function handleFileSelect(event) {
-        const file = event.target.files[0];
-        if (file) {
-            document.getElementById('drop-title').innerText = "Vidéo chargée : " + file.name;
-            document.getElementById('drop-sub').innerText = (file.size / (1024 * 1024)).toFixed(2) + " Mo • Analyse linguistique en cours...";
-            
-            setTimeout(() => {
-                document.getElementById('source-lang').options[0].text = "🌐 Détecté : Anglais (98%)";
-                document.getElementById('output-text').value = "[Détection IA] Langue source identifiée : Anglais. Prêt pour la traduction vers le Français.";
-            }, 1200);
-        }
-    }
-
-    // Logo 3D d'origine avec le centre vert et les icônes réseaux sociaux
+    // Graphic Three.js Logo
     const container = document.getElementById('logo-3d');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
@@ -477,41 +293,13 @@
     renderer.setSize(60, 60);
     container.appendChild(renderer.domElement);
 
-    // Sphère centrale
-    const sphereGeo = new THREE.SphereGeometry(1.0, 32, 32);
-    const sphereMat = new THREE.MeshBasicMaterial({ color: 0x10b981 });
-    const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+    const sphere = new THREE.Mesh(new THREE.SphereGeometry(1.0, 32, 32), new THREE.MeshBasicMaterial({ color: 0x10b981 }));
     scene.add(sphere);
-
-    // Anneau de l'œil
-    const ringGeo = new THREE.TorusGeometry(2.0, 0.1, 16, 100);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
-    const ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.rotation.x = Math.PI / 2.5;
-    scene.add(ring);
-
-    // Satellites tournoyants (YouTube, TikTok, Netflix, Facebook)
-    const iconsGroup = new THREE.Group();
-    const colors = [0xff0000, 0x00f2fe, 0xe50914, 0x1877f2]; // Youtube, TikTok, Netflix, Facebook
-    
-    colors.forEach((col, idx) => {
-        const satGeo = new THREE.BoxGeometry(0.5, 0.3, 0.1);
-        const satMat = new THREE.MeshBasicMaterial({ color: col });
-        const sat = new THREE.Mesh(satGeo, satMat);
-        const angle = (idx / 4) * Math.PI * 2;
-        sat.position.x = Math.cos(angle) * 3.2;
-        sat.position.y = Math.sin(angle) * 3.2;
-        iconsGroup.add(sat);
-    });
-
-    scene.add(iconsGroup);
-    camera.position.z = 7;
+    camera.position.z = 5;
 
     function animate() {
         requestAnimationFrame(animate);
         sphere.rotation.y += 0.02;
-        ring.rotation.z += 0.01;
-        iconsGroup.rotation.z -= 0.02;
         renderer.render(scene, camera);
     }
     animate();
