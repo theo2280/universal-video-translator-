@@ -14,12 +14,11 @@ app.use(cors({
 
 app.use(express.json());
 
-// Clé API Pi Network (depuis Render Environment Variable ou par défaut)
 const PI_API_KEY = process.env.PI_API_KEY || "";
 
-// Route racine GET / (pour éviter l'erreur Cannot GET /)
+// Route racine GET / (Obligatoire pour effacer "Cannot GET /")
 app.get('/', (req, res) => {
-    res.status(200).send("Universal Video Translator Backend is running!");
+    res.status(200).send("Universal Video Translator Backend is running & awake!");
 });
 
 // Route d'approbation Pi Payment (/api/approve)
@@ -32,21 +31,18 @@ app.post('/api/approve', async (req, res) => {
     }
 
     try {
-        // Validation auprès de l'API Pi Network Platform
         const response = await axios.post(
             `https://api.minepi.com/v2/payments/${paymentId}/approve`,
             {},
             {
-                headers: {
-                    'Authorization': `Key ${PI_API_KEY}`
-                }
+                headers: { 'Authorization': `Key ${PI_API_KEY}` }
             }
         );
-        console.log("<-- Approbation réussie auprès de Pi API:", response.data);
+        console.log("<-- Approbation réussie via Pi API:", response.data);
         return res.status(200).json({ success: true, data: response.data });
     } catch (error) {
         console.error("Erreur approbation Pi API:", error.response ? error.response.data : error.message);
-        // On renvoie quand même du 200/succès local si problème de clé API Sandbox pour ne pas bloquer le flux de test
+        // Toujours répondre 200 en sandbox pour débloquer l'Étape 10
         return res.status(200).json({ success: true, message: "Approved locally for sandbox" });
     }
 });
@@ -65,12 +61,10 @@ app.post('/api/complete', async (req, res) => {
             `https://api.minepi.com/v2/payments/${paymentId}/complete`,
             { txid },
             {
-                headers: {
-                    'Authorization': `Key ${PI_API_KEY}`
-                }
+                headers: { 'Authorization': `Key ${PI_API_KEY}` }
             }
         );
-        console.log("<-- Complétion réussie auprès de Pi API:", response.data);
+        console.log("<-- Complétion réussie via Pi API:", response.data);
         return res.status(200).json({ success: true, data: response.data });
     } catch (error) {
         console.error("Erreur complétion Pi API:", error.response ? error.response.data : error.message);
@@ -81,3 +75,12 @@ app.post('/api/complete', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+// --- SYSTÈME KEEP-ALIVE (Anti-sommeil Render) ---
+// Envoie un ping toutes les 5 minutes pour maintenir le serveur éveillé H24
+const SERVER_URL = 'https://universal-video-translator.onrender.com';
+setInterval(() => {
+    axios.get(SERVER_URL)
+        .then(() => console.log('Keep-alive ping réussi'))
+        .catch(err => console.log('Keep-alive ping en cours...'));
+}, 5 * 60 * 1000);
