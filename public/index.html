@@ -1,23 +1,71 @@
-Pi.createPayment({
-  amount: 1,
-  memo: "Test Transaction Mainnet",
-  metadata: { type: "test_payment" }
-}, {
-  onReadyForServerApproval: function(paymentId) {
-    fetch('/api/pi/approve', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ paymentId: paymentId })
-    });
-  },
-  onReadyForServerCompletion: function(paymentId, txid) {
-    fetch('/api/pi/complete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ paymentId: paymentId, txid: txid })
-    });
-  },
-  onCancel: function(paymentId) { console.log("Paiement annulé"); },
-  onError: function(error) { console.error("Erreur paiement:", error); }
-});
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Video Translator</title>
+  <!-- SDK Pi Network OBLIGATOIRE -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+    .plan-card { border: 1px solid #ccc; border-radius: 8px; padding: 15px; margin: 10px auto; max-width: 300px; }
+    button { background-color: #673ab7; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    button:hover { background-color: #512da8; }
+  </style>
+</head>
+<body>
+
+  <h1>Universal Video Translator</h1>
+  <p>Choisissez votre formule d'abonnement pour traduire vos vidéos :</p>
+
+  <!-- CARTES D'ABONNEMENT -->
+  <div class="plan-card">
+    <h3>Pass Mensuel</h3>
+    <p>Accès illimité pendant 30 jours</p>
+    <button onclick="lancerPaiementPi(1, 'Abonnement Mensuel Traduction Video')">S'abonner pour 1 Pi</button>
+  </div>
+
+  <div class="plan-card">
+    <h3>Pass Annuel</h3>
+    <p>Accès illimité pendant 1 an</p>
+    <button onclick="lancerPaiementPi(10, 'Abonnement Annuel Traduction Video')">S'abonner pour 10 Pi</button>
+  </div>
+
+  <script>
+    // 1. Initialisation du SDK Pi (OBLIGATOIRE sur Mainnet)
+    Pi.init({ version: "2.0", sandbox: false });
+
+    // 2. Fonction de paiement réutilisable
+    function lancerPaiementPi(montant, description) {
+      Pi.createPayment({
+        amount: montant,
+        memo: description,
+        metadata: { type: "subscription" }
+      }, {
+        onReadyForServerApproval: function(paymentId) {
+          fetch('/api/pi/approve', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ paymentId: paymentId })
+          });
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          fetch('/api/pi/complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ paymentId: paymentId, txid: txid })
+          });
+        },
+        onCancel: function(paymentId) {
+          console.log("Paiement annulé :", paymentId);
+        },
+        onError: function(error, payment) {
+          console.error("Erreur SDK Pi :", error);
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
 

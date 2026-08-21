@@ -7,7 +7,7 @@ app.use(express.json());
 const PI_API_URL = 'https://api.minepi.com/v2';
 const PI_API_KEY = process.env.PI_API_KEY;
 
-// Route 1 : Approbation automatique (empêche l'expiration de 30s)
+// Route 1 : Approbation instantanée du paiement
 app.post('/api/pi/approve', async (req, res) => {
   const { paymentId } = req.body;
   try {
@@ -18,12 +18,12 @@ app.post('/api/pi/approve', async (req, res) => {
     );
     return res.status(200).json({ success: true, data: response.data });
   } catch (error) {
-    console.error("Erreur d'approbation:", error.response?.data || error.message);
+    console.error("Erreur approval:", error.response?.data || error.message);
     return res.status(500).json({ error: "Échec d'approbation" });
   }
 });
 
-// Route 2 : Finalisation de la transaction
+// Route 2 : Validation finale du paiement
 app.post('/api/pi/complete', async (req, res) => {
   const { paymentId, txid } = req.body;
   try {
@@ -34,7 +34,7 @@ app.post('/api/pi/complete', async (req, res) => {
     );
     return res.status(200).json({ success: true, data: response.data });
   } catch (error) {
-    console.error("Erreur de complétion:", error.response?.data || error.message);
+    console.error("Erreur completion:", error.response?.data || error.message);
     return res.status(500).json({ error: "Échec de complétion" });
   }
 });
