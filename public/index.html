@@ -32,39 +32,71 @@
   </div>
 
   <script>
-    // 1. Initialisation du SDK Pi (OBLIGATOIRE sur Mainnet)
-    Pi.init({ version: "2.0", sandbox: false });
+  let currentUser = null;
 
-    // 2. Fonction de paiement réutilisable
-    function lancerPaiementPi(montant, description) {
-      Pi.createPayment({
-        amount: montant,
-        memo: description,
-        metadata: { type: "subscription" }
-      }, {
-        onReadyForServerApproval: function(paymentId) {
-          fetch('/api/pi/approve', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ paymentId: paymentId })
-          });
-        },
-        onReadyForServerCompletion: function(paymentId, txid) {
-          fetch('/api/pi/complete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ paymentId: paymentId, txid: txid })
-          });
-        },
-        onCancel: function(paymentId) {
-          console.log("Paiement annulé :", paymentId);
-        },
-        onError: function(error, payment) {
-          console.error("Erreur SDK Pi :", error);
-        }
-      });
+  // 1. Initialisation du SDK
+  Pi.init({ version: "2.0", sandbox: false });
+
+  // 2. Authentification obligatoire au chargement
+  async function authPi() {
+    try {
+      const scopes = ['username', 'payments'];
+      function onIncompletePaymentFound(payment) {
+        console.log("Paiement incomplet trouvé :", payment);
+      }
+      currentUser = await Pi.authenticate(scopes, onIncompletePaymentFound);
+      console.log("Connecté en tant que :", currentUser.username);
+    } catch (err) {
+      console.error("Erreur authentification Pi :", err);
     }
-  </script>
+  }
+
+  // Lancer l'authentification
+  authPi();
+
+  // 3. Fonction de paiement avec gestion d'erreur
+  function lancerPaiementPi(montant, description) {
+    if (!currentUser) {
+      alert("Veuillez patienter pendant la connexion à votre compte Pi...");
+      authPi();
+      return;
+    }
+
+    Pi.createPayment({
+      amount: montant,
+      memo: description,
+      metadata: { type: "subscription" }
+    }, {
+      onReadyForServerApproval: function(paymentId) {
+        fetch('/api/pi/approve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paymentId: paymentId })
+        })
+        .then(res => res.json())
+        .then(data => console.log("Approbation serveur :", data))
+        .catch(err => console.error("Erreur approval fetch :", err));
+      },
+      onReadyForServerCompletion: function(paymentId, txid) {
+        fetch('/api/pi/complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paymentId: paymentId, txid: txid })
+        })
+        .then(res => res.json())
+        .then(data => console.log("Complétion serveur :", data))
+        .catch(err => console.error("Erreur completion fetch :", err));
+      },
+      onCancel: function(paymentId) {
+        console.log("Paiement annulé par l'utilisateur :", paymentId);
+      },
+      onError: function(error, payment) {
+        console.error("Erreur SDK Pi :", error);
+      }
+    });
+  }
+</script>
+
 
 </body>
 </html>
