@@ -1,36 +1,43 @@
-const { exec } = require('child_process');
-const path = require('path');
+const express = require('express');
+const axios = require('axios');
+const app = express();
 
-app.post('/api/pi/complete', async (req, res) => {
-  const { paymentId, txid, targetLang } = req.body;
+app.use(express.json());
 
+const PI_API_URL = 'https://api.minepi.com/v2';
+const PI_API_KEY = process.env.PI_API_KEY;
+
+// Route 1 : Approbation automatique (empêche l'expiration de 30s)
+app.post('/api/pi/approve', async (req, res) => {
+  const { paymentId } = req.body;
   try {
-    // 1. Validation de la transaction auprès de Pi Core Team
-    const piResponse = await completePiPayment(paymentId, txid);
-    if (!piResponse.ok) {
-      return res.status(400).json({ error: "Paiement Pi non validé." });
-    }
-
-    // 2. Exécution du moteur de traitement gratuit local
-    const inputAudio = path.join(__dirname, '../uploads/input.wav');
-    const outputAudio = path.join(__dirname, '../public/output.mp3');
-
-    exec(`python3 translator_engine.py ${inputAudio} ${targetLang} ${outputAudio}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Erreur d'exécution IA: ${error.message}`);
-        return res.status(500).json({ error: "Échec du traitement média." });
-      }
-
-      // 3. Renvoi du résultat réel au Pi Browser
-      return res.status(200).json({
-        success: true,
-        downloadUrl: "/output.mp3",
-        message: "Traduction et doublage terminés !"
-      });
-    });
-
-  } catch (err) {
-    res.status(500).json({ error: "Erreur serveur." });
+    const response = await axios.post(
+      `${PI_API_URL}/payments/${paymentId}/approve`,
+      {},
+      { headers: { Authorization: `Key ${PI_API_KEY}` } }
+    );
+    return res.status(200).json({ success: true, data: response.data });
+  } catch (error) {
+    console.error("Erreur d'approbation:", error.response?.data || error.message);
+    return res.status(500).json({ error: "Échec d'approbation" });
   }
 });
+
+// Route 2 : Finalisation de la transaction
+app.post('/api/pi/complete', async (req, res) => {
+  const { paymentId, txid } = req.body;
+  try {
+    const response = await axios.post(
+      `${PI_API_URL}/payments/${paymentId}/complete`,
+      { txid },
+      { headers: { Authorization: `Key ${PI_API_KEY}` } }
+    );
+    return res.status(200).json({ success: true, data: response.data });
+  } catch (error) {
+    console.error("Erreur de complétion:", error.response?.data || error.message);
+    return res.status(500).json({ error: "Échec de complétion" });
+  }
+});
+
+module.exports = app;
 
