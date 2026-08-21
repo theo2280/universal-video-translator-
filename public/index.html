@@ -34,10 +34,10 @@
   <script>
   let currentUser = null;
 
-  // 1. Initialisation du SDK
+  // 1. Initialisation SDK Mainnet
   Pi.init({ version: "2.0", sandbox: false });
 
-  // 2. Authentification obligatoire au chargement
+  // 2. Authentification obligatoire
   async function authPi() {
     try {
       const scopes = ['username', 'payments'];
@@ -45,19 +45,19 @@
         console.log("Paiement incomplet trouvé :", payment);
       }
       currentUser = await Pi.authenticate(scopes, onIncompletePaymentFound);
-      console.log("Connecté en tant que :", currentUser.username);
+      console.log("Connecté :", currentUser.username);
     } catch (err) {
-      console.error("Erreur authentification Pi :", err);
+      console.error("Erreur d'authentification :", err);
     }
   }
 
-  // Lancer l'authentification
+  // Lancer au chargement
   authPi();
 
-  // 3. Fonction de paiement avec gestion d'erreur
+  // 3. Traitement des paiements
   function lancerPaiementPi(montant, description) {
     if (!currentUser) {
-      alert("Veuillez patienter pendant la connexion à votre compte Pi...");
+      alert("Veuillez patienter pendant l'authentification...");
       authPi();
       return;
     }
@@ -67,43 +67,47 @@
       memo: description,
       metadata: { type: "subscription" }
     }, {
+      // Étape 1 : Approbation par le serveur
       onReadyForServerApproval: function(paymentId) {
-  fetch('/api/pi/approve', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ paymentId: paymentId })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.error) alert("ERREUR APPROVAL: " + JSON.stringify(data.error));
-    else console.log("Approuvé avec succès");
-  })
-  .catch(err => alert("Erreur réseau : " + err));
-},
+        fetch('/api/pi/approve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paymentId: paymentId })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) alert("ERREUR APPROVAL: " + JSON.stringify(data.error));
+          else console.log("Approuvé avec succès");
+        })
+        .catch(err => alert("Erreur réseau approval : " + err));
+      },
 
-      onReadyForServerApproval: function(paymentId) {
-  fetch('/api/pi/approve', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ paymentId: paymentId })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.error) alert("ERREUR APPROVAL: " + JSON.stringify(data.error));
-    else console.log("Approuvé avec succès");
-  })
-  .catch(err => alert("Erreur réseau : " + err));
-},
+      // Étape 2 : Complétion du paiement sur la blockchain (qui manquait !)
+      onReadyForServerCompletion: function(paymentId, txid) {
+        fetch('/api/pi/complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paymentId: paymentId, txid: txid })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) alert("ERREUR COMPLETION: " + JSON.stringify(data.error));
+          else console.log("Complété avec succès");
+        })
+        .catch(err => alert("Erreur réseau completion : " + err));
+      },
 
       onCancel: function(paymentId) {
-        console.log("Paiement annulé par l'utilisateur :", paymentId);
+        console.log("Paiement annulé :", paymentId);
       },
       onError: function(error, payment) {
-        console.error("Erreur SDK Pi :", error);
+        console.error("Erreur SDK :", error);
       }
     });
   }
 </script>
+
+
 
 
 </body>
