@@ -68,25 +68,33 @@
       metadata: { type: "subscription" }
     }, {
       onReadyForServerApproval: function(paymentId) {
-        fetch('/api/pi/approve', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ paymentId: paymentId })
-        })
-        .then(res => res.json())
-        .then(data => console.log("Approbation serveur :", data))
-        .catch(err => console.error("Erreur approval fetch :", err));
-      },
-      onReadyForServerCompletion: function(paymentId, txid) {
-        fetch('/api/pi/complete', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ paymentId: paymentId, txid: txid })
-        })
-        .then(res => res.json())
-        .then(data => console.log("Complétion serveur :", data))
-        .catch(err => console.error("Erreur completion fetch :", err));
-      },
+  fetch('/api/pi/approve', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paymentId: paymentId })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.error) alert("ERREUR APPROVAL: " + JSON.stringify(data.error));
+    else console.log("Approuvé avec succès");
+  })
+  .catch(err => alert("Erreur réseau : " + err));
+},
+
+      onReadyForServerApproval: function(paymentId) {
+  fetch('/api/pi/approve', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paymentId: paymentId })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.error) alert("ERREUR APPROVAL: " + JSON.stringify(data.error));
+    else console.log("Approuvé avec succès");
+  })
+  .catch(err => alert("Erreur réseau : " + err));
+},
+
       onCancel: function(paymentId) {
         console.log("Paiement annulé par l'utilisateur :", paymentId);
       },
